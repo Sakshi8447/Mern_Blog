@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure} from '../redux/user/userSlice';
 import { baseUrl } from '../constant/baseUrl';
+import axios from 'axios';
 
 
 
@@ -12,33 +13,65 @@ export default function SignIn() {
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
-  };
+  
+ // const handleChange = (e) => {
+
+    //({ ...formData, [e.target.id]: e.target.value.trim() });
+  //};
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.email || !formData.password) {
-      return dispatch(signInFailure('Please fill all the fields'));
+    e.preventDefault()
+    if (email === "" || password === "") {
+      toast("Please fill all fields", { type: "error" })
+      // setError("Please fill all fields")
     }
-    try {
-      dispatch(signInStart());
-      const res = await fetch(`${baseUrl}/api/auth/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
+
+    else {
+      const user = {
+
+        email: email.toUpperCase(),
+        password: password
       }
 
-      if (res.ok) {
-        dispatch(signInSuccess(data));
-        navigate('/');
-      }
-    } catch (error) {
-      dispatch(signInFailure(error.message));
+      
+      axios.defaults.withCredentials = true;
+
+      await axios.post(`${baseUrl}/api/auth/signin`, user).then((res) => {
+        console.log(res.data)
+        // setError(res.data.message)
+        //toast(res.data.message, { type: "success" })
+        dispatch(signInSuccess(res.data.data))
+        navigate("/")
+      })
+        .catch((error) => {
+          console.log(error)
+          // setError(error.response.data.message)
+         // toast(error.response.data.message, { type: "error" })
+        })
+
     }
+  
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!formData.email || !formData.password) {
+  //     return dispatch(signInFailure('Please fill all the fields'));
+  //   }
+  //   try {
+  //     dispatch(signInStart());
+  //     const res= await axios.post(`${baseUrl}/api/auth/signin`,formData) 
+  //     // res.data.success
+  //     // const data = await res.json();
+  //     if (res.data.success === false) {
+  //       dispatch(signInFailure(res.data.message));
+  //     }
+
+  //     if (res.status===200) {
+  //       dispatch(signInSuccess(res.data.data));
+  //       navigate('/');
+  //     }
+  //   } catch (error) {
+  //     dispatch(signInFailure(error.message));
+  //   }
   };
   return (
     <div>
@@ -82,16 +115,16 @@ export default function SignIn() {
             <Button
               gradientDuoTone='purpleToBlue'
               type='submit'
-              disabled={loading}
+              // disabled={loading}
             >
-              {loading ? (
+              {/* {loading ? (
                 <>
                   <Spinner size='sm' />
-                  <span className='pl-3'>Loading...</span>
+                  <span className='pl-3'></span>
                 </>
-              ) : (
+              ) : ( */}
                 'Sign In'
-              )}
+              {/* )} */}
             </Button>
             
           </form>
