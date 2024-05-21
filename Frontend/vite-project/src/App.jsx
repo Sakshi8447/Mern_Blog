@@ -14,35 +14,40 @@ import CreatePost from './pages/CreatePost.jsx'
 import UpdatePost from './pages/UpdatePost.jsx'
 import PostPage from './pages/PostPage.jsx'
 import Search from './pages/Search.jsx'
+import { ToastContainer } from 'react-toastify'
+import { useEffect } from 'react'
+
+
 
 
 export default function App() {
   return (
-
-    <BrowserRouter>
-    <Header />
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/sign-in" element={<SignIn />} />
-      <Route path="/sign-up" element={<SignUp />} />
-      <Route element={<PrivateRoute />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route element={<OnlyAdminPrivateRoute />} />
-      <Route path='/create-post' element={<CreatePost />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path='/update-post/:postId' element={<UpdatePost />} />
-      <Route path='/post/:postSlug' element={<PostPage />} />
-      <Route path='/search' element={<Search/>} />
+    <>
 
 
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route element={<PrivateRoute />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<OnlyAdminPrivateRoute />} />
+          <Route path='/create-post' element={<CreatePost />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path='/update-post/:postId' element={<UpdatePost />} />
+          <Route path='/post/:postSlug' element={<PostPage />} />
+          <Route path='/search' element={<Search />} />
 
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+      <ToastContainer />
 
-    
-    </Routes>
-    <Footer/>
-    </BrowserRouter>
+    </>
 
-      )
+  )
 }
 
