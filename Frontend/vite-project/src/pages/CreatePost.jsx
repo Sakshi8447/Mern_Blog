@@ -13,6 +13,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
 import { baseUrl } from '../constant/baseUrl';
+import axios from 'axios';
 
 export default function CreatePost() {
   const [file, setFile] = useState(null);
@@ -62,23 +63,29 @@ export default function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${baseUrl}/api/post/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setPublishError(data.message);
-        return;
-      }
+      axios.defaults.withCredentials = true;
+      const res = await axios.post(`${baseUrl}/api/post/create`, formData);
+      console.log(res.data);
+      const data = res.data;
+      navigate(`/post/${data.slug}`);
+      
+      // const res = await fetch(`${baseUrl}/api/post/create`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
+      // const data = await res.json();
+      // if (!res.ok) {
+      //   setPublishError(data.message);
+      //   return;
+      // }
 
-      if (res.ok) {
-        setPublishError(null);
-        navigate(`/post/${data.slug}`);
-      }
+      // if (res.ok) {
+      //   setPublishError(null);
+      //   navigate(`/post/${data.slug}`);
+      // }
     } catch (error) {
       setPublishError('Something went wrong');
     }

@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../constant/baseUrl';
+import axios from 'axios';
 
 
 export default function DashProfile() {
@@ -100,21 +101,26 @@ export default function DashProfile() {
     }
     try {
       dispatch(updateStart());
-      const res = await fetch(`${baseUrl}/api/user/update/${currentUser._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        dispatch(updateFailure(data.message));
-        setUpdateUserError(data.message);
-      } else {
-        dispatch(updateSuccess(data));
-        setUpdateUserSuccess("User's profile updated successfully");
-      }
+      axios.defaults.withCredentials = true;
+      const res  = await axios.put(`${baseUrl}/api/user/update/${currentUser._id}`, formData)
+      console.log(res.data)
+      // dispatch(updateSuccess(res.data.data))
+      // navigate("/")
+      // const res = await fetch(`${baseUrl}/api/user/update/${currentUser._id}`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
+      // const data = await res.json();
+      // if (!res.ok) {
+      //   dispatch(updateFailure(data.message));
+      //   setUpdateUserError(data.message);
+      // } else {
+      //   dispatch(updateSuccess(data));
+      //   setUpdateUserSuccess("User's profile updated successfully");
+      // }
     } catch (error) {
       dispatch(updateFailure(error.message));
       setUpdateUserError(error.message);
